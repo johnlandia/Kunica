@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#1C1A17">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./vendor/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <style>
   :root{
@@ -1402,14 +1402,9 @@ async function signOut(){
 // alternativa antes de desistir. Isto evita que uma falha de rede pontual
 // (VPN, CDN lento, ligação instável) pareça um "sistema por configurar".
 async function tentarRecuperarSupabase(){
-  if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return false; // isto sim é falta de configuração real
-
-  for(let tentativa = 0; tentativa < 2; tentativa++){
-    if(typeof window.supabase !== 'undefined' && window.supabase.createClient) break;
-    await new Promise(r => setTimeout(r, 1200));
-  }
+  if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return false;
   if(typeof window.supabase === 'undefined' || !window.supabase.createClient){
-    await carregarScriptComPromise('https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js');
+    await carregarScriptComPromise('./vendor/supabase.js');
   }
   if(typeof window.supabase !== 'undefined' && window.supabase.createClient){
     try{
@@ -1418,11 +1413,10 @@ async function tentarRecuperarSupabase(){
       });
       supabaseReady = true;
       return true;
-    }catch(_e){ /* segue para o ecrã de erro */ }
+    }catch(_e){ }
   }
   return false;
 }
-
 function carregarScriptComPromise(src){
   return new Promise((resolve) => {
     const s = document.createElement('script');
@@ -1438,8 +1432,8 @@ function renderNotConfigured(){
     <div class="center-screen"><div class="card">
       <div class="logo-mark">DIONUEL</div>
       <h1>Não foi possível carregar o sistema</h1>
-      <p>Isto costuma ser a ligação à internet (ou uma VPN ativa) a bloquear um recurso necessário — raramente é um problema no site em si.</p>
-      <p style="margin-top:10px; font-size:13px; color:var(--linho-dim);">Tente: desativar a VPN, mudar de rede Wi-Fi/dados móveis, ou tentar de novo daqui a pouco.</p>
+      <p>O sistema não conseguiu iniciar. Verifique a ligação à internet e tente novamente.</p>
+      <p style="margin-top:10px; font-size:13px; color:var(--linho-dim);">A biblioteca principal agora está alojada no próprio site. Se continuar a acontecer, toque em “Tentar novamente”.</p>
       <button class="btn-submit" id="tentarDeNovoBtn" style="margin-top:16px;">Tentar novamente</button>
     </div></div>
   `;

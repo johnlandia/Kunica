@@ -7,8 +7,8 @@
 // onde está o index.html no servidor (ex.: Netlify) — senão o navegador
 // não os encontra.
 
-const CACHE_VERSAO = 'dionuel-v1';
-const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE_VERSAO = 'dionuel-v2-supabase-local';
+const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js'];
 
 self.addEventListener('install', (evento) => {
   self.skipWaiting();
