@@ -1,0 +1,39 @@
+name: Wire Store V2
+on:
+  push:
+    branches: [main]
+jobs:
+  wire:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject Store V2 assets
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          css='<link rel="stylesheet" href="./assets/store-v2.css">'
+          js='<script src="./assets/store-v2.js" defer></script>'
+          changed=False
+          if css not in s:
+              marker='</head>'
+              if marker not in s: raise SystemExit('index.html: </head> not found')
+              s=s.replace(marker, css+'\n'+marker, 1); changed=True
+          if js not in s:
+              marker='</body>'
+              if marker not in s: raise SystemExit('index.html: </body> not found')
+              s=s.replace(marker, js+'\n'+marker, 1); changed=True
+          if changed: p.write_text(s,encoding='utf-8')
+          print('changed=',changed)
+      - name: Commit wiring
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'feat: activate store v2 interface'
+          git push
