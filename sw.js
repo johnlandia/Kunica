@@ -8,7 +8,7 @@
 // não os encontra.
 
 const CACHE_VERSAO = 'dionuel-v2-supabase-local';
-const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js'];
+const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './vendor/supabase.js'];
 
 self.addEventListener('install', (evento) => {
   self.skipWaiting();
