@@ -1,0 +1,15 @@
+:root{--v2-gold:#C7A573;--v2-ink:#141210;--v2-panel:#252220;--v2-muted:#C9C2B4}
+.store-v2-quick{max-width:1100px;margin:0 auto;padding:14px 24px 0;position:relative;z-index:4}
+.store-v2-quick-inner{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;background:rgba(37,34,32,.82);border:1px solid rgba(199,165,115,.18);border-radius:12px;backdrop-filter:blur(12px)}
+.store-v2-quick-label{font:600 10px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--v2-muted);padding:0 8px}
+.store-v2-action{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(199,165,115,.18);background:transparent;color:#F7F4EE;border-radius:999px;padding:8px 13px;font:600 12px Inter,sans-serif;text-decoration:none;transition:.18s ease}
+.store-v2-action:hover{border-color:var(--v2-gold);background:rgba(199,165,115,.1);transform:translateY(-1px)}
+.store-v2-action.primary{background:var(--v2-gold);color:var(--v2-ink);border-color:var(--v2-gold)}
+.store-v2-search{margin-left:auto;display:flex;align-items:center;min-width:180px;flex:1;max-width:280px}
+.store-v2-search input{width:100%;background:#141210;border:1px solid rgba(199,165,115,.18);color:#F7F4EE;border-radius:999px;padding:9px 13px;font:12px Inter,sans-serif;outline:0}
+.store-v2-search input:focus{border-color:var(--v2-gold)}
+.store-v2-trust{max-width:1100px;margin:0 auto;padding:0 24px 8px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.store-v2-trust-item{padding:12px 14px;border:1px solid rgba(199,165,115,.12);border-radius:10px;background:rgba(37,34,32,.48)}
+.store-v2-trust-item strong{display:block;font-size:12px;color:#F7F4EE;margin-bottom:3px}.store-v2-trust-item span{font-size:10.5px;color:var(--v2-muted);line-height:1.4}
+.store-v2-hidden{display:none!important}
+@media(max-width:640px){.store-v2-quick{padding:10px 12px 0}.store-v2-quick-inner{overflow-x:auto;flex-wrap:nowrap}.store-v2-quick-label{display:none}.store-v2-action{flex:0 0 auto}.store-v2-search{order:-1;flex:1;min-width:150px}.store-v2-trust{grid-template-columns:1fr;padding:0 12px 8px;gap:7px}.store-v2-trust-item{padding:10px 12px}.store-v2-trust-item:nth-child(3){display:none}}
