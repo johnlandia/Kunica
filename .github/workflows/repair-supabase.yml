@@ -16,78 +16,61 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
       - name: Install Supabase JS
         run: npm install --no-save --no-package-lock @supabase/supabase-js@2
-
       - name: Create local Supabase bundle and patch app
         run: |
           mkdir -p vendor
           cp node_modules/@supabase/supabase-js/dist/umd/supabase.js vendor/supabase.js
           python3 - <<'PY'
           from pathlib import Path
-
           index = Path('index.html')
           text = index.read_text(encoding='utf-8')
           old = '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
-          new = '<script src="./vendor/supabase.js"></script>'
-          if old in text:
-              text = text.replace(old, new, 1)
-
+          text = text.replace(old, '<script src="./vendor/supabase.js"></script>', 1)
           old_error = '<p>Isto costuma ser a ligação à internet (ou uma VPN ativa) a bloquear um recurso necessário — raramente é um problema no site em si.</p>'
-          new_error = '<p>O sistema não conseguiu iniciar. Verifique a ligação à internet e tente novamente.</p>'
-          text = text.replace(old_error, new_error, 1)
-
+          text = text.replace(old_error, '<p>O sistema não conseguiu iniciar. Verifique a ligação à internet e tente novamente.</p>', 1)
           old_error2 = '<p style="margin-top:10px; font-size:13px; color:var(--linho-dim);">Tente: desativar a VPN, mudar de rede Wi-Fi/dados móveis, ou tentar de novo daqui a pouco.</p>'
-          new_error2 = '<p style="margin-top:10px; font-size:13px; color:var(--linho-dim);">A biblioteca principal agora está alojada no próprio site. Se continuar a acontecer, toque em “Tentar novamente”.</p>'
-          text = text.replace(old_error2, new_error2, 1)
-
-          # Local bundle means this recovery should not depend on another CDN.
-          start = text.find("async function tentarRecuperarSupabase(){")
-          end = text.find("\nfunction carregarScriptComPromise", start)
+          text = text.replace(old_error2, '<p style="margin-top:10px; font-size:13px; color:var(--linho-dim);">A biblioteca principal agora está alojada no próprio site. Se continuar a acontecer, toque em “Tentar novamente”.</p>', 1)
+          start = text.find('async function tentarRecuperarSupabase(){')
+          end = text.find('\nfunction carregarScriptComPromise', start)
           if start != -1 and end != -1:
               replacement = '''async function tentarRecuperarSupabase(){
             if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return false;
-            if(typeof window.supabase === 'undefined' || !window.supabase.createClient){
-              await carregarScriptComPromise('./vendor/supabase.js');
-            }
+            if(typeof window.supabase === 'undefined' || !window.supabase.createClient){ await carregarScriptComPromise('./vendor/supabase.js'); }
             if(typeof window.supabase !== 'undefined' && window.supabase.createClient){
-              try{
-                sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                  auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: true }
-                });
-                supabaseReady = true;
-                return true;
-              }catch(_e){ }
+              try{ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {auth:{flowType:'implicit',detectSessionInUrl:true,persistSession:true}}); supabaseReady=true; return true; }catch(_e){}
             }
             return false;
           }
           '''
               text = text[:start] + replacement + text[end+1:]
-
+          # Keep the existing application and add the new storefront layer only once.
+          if 'storefront-phase1.css' not in text:
+              text = text.replace('</head>', '<link rel="stylesheet" href="./storefront-phase1.css"><link rel="stylesheet" href="./storefront-request.css"></head>', 1)
+          if 'storefront-phase1.js' not in text:
+              text = text.replace('</body>', '<script src="./storefront-phase1.js"></script><script src="./storefront-phase1-enhance.js"></script><script src="./storefront-request.js"></script></body>', 1)
+          elif 'storefront-request.js' not in text:
+              text = text.replace('</body>', '<script src="./storefront-request.js"></script></body>', 1)
           index.write_text(text, encoding='utf-8')
-
           sw = Path('sw.js')
           if sw.exists():
               swtext = sw.read_text(encoding='utf-8')
-              swtext = swtext.replace("const CACHE_VERSAO = 'dionuel-v1';", "const CACHE_VERSAO = 'dionuel-v2-supabase-local';")
-              swtext = swtext.replace("'./icon-512.png'", "'./icon-512.png', './vendor/supabase.js'")
+              swtext = swtext.replace("const CACHE_VERSAO = 'dionuel-v1';", "const CACHE_VERSAO = 'dionuel-v3-storefront';")
+              if "'./vendor/supabase.js'" not in swtext: swtext = swtext.replace("'./icon-512.png'", "'./icon-512.png', './vendor/supabase.js'")
+              for f in ['storefront-phase1.css','storefront-phase1-enhance.js','storefront-request.css','storefront-request.js']:
+                  if f not in swtext: swtext = swtext.replace("'./vendor/supabase.js'", "'./vendor/supabase.js', './%s'" % f)
               sw.write_text(swtext, encoding='utf-8')
           PY
-
       - name: Commit repaired files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html sw.js vendor/supabase.js
-          if git diff --cached --quiet; then
-            echo "No changes needed"
-            exit 0
-          fi
-          git commit -m "fix: make Supabase load locally [skip ci]"
+          if git diff --cached --quiet; then echo "No changes needed"; exit 0; fi
+          git commit -m "fix: wire functional storefront layer [skip ci]"
           git push
