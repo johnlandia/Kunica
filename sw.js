@@ -7,8 +7,8 @@
 // onde está o index.html no servidor (ex.: Netlify) — senão o navegador
 // não os encontra.
 
-const CACHE_VERSAO = 'dionuel-v3-phase1-store';
-const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './storefront-phase1.js', './storefront-phase1.css', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js'];
+const CACHE_VERSAO = 'dionuel-v4-premium-interface';
+const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './storefront-phase1.js', './storefront-phase1.css', './storefront-phase1-enhance.js', './storefront-request.js', './storefront-request.css']
 
 self.addEventListener('install', (evento) => {
   self.skipWaiting();
