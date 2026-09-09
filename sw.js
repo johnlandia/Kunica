@@ -9,9 +9,6 @@
 
 const CACHE_VERSAO = 'dionuel-v4-premium-interface';
 const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './storefront-phase1.js', './storefront-phase1.css', './storefront-phase1-enhance.js', './storefront-request.js', './storefront-request.css']
-
-self.addEventListener('install', (evento) => {
-  self.skipWaiting();
   evento.waitUntil(
     caches.open(CACHE_VERSAO).then((cache) => {
       // Cada ficheiro é guardado isoladamente — se um falhar (ex.: nome
