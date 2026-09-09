@@ -1,0 +1,46 @@
+name: Activate DIONUEL Phase 1 storefront
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  activate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject storefront assets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          css='<link rel="stylesheet" href="./storefront-phase1.css">'
+          js='<script src="./storefront-phase1.js" defer></script>'
+          if css not in s:
+              s=s.replace('</head>', css+'\n</head>', 1)
+          if js not in s:
+              s=s.replace('</body>', js+'\n</body>', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Update service worker cache
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('sw.js')
+          if p.exists():
+              s=p.read_text(encoding='utf-8')
+              s=s.replace("const CACHE_VERSAO = 'dionuel-v2-supabase-local';","const CACHE_VERSAO = 'dionuel-v3-phase1-store';")
+              for f in ["./storefront-phase1.css","./storefront-phase1.js"]:
+                  if f not in s:
+                      s=s.replace("'./vendor/supabase.js'", "'./vendor/supabase.js', '"+f+"'", 1)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js storefront-phase1.css storefront-phase1.js
+          git diff --cached --quiet || git commit -m 'feat(store): activate Phase 1 premium storefront'
+          git push
