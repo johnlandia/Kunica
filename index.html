@@ -1405,17 +1405,9 @@ async function signOut(){
 // (VPN, CDN lento, ligação instável) pareça um "sistema por configurar".
 async function tentarRecuperarSupabase(){
   if(!SUPABASE_URL || !SUPABASE_ANON_KEY) return false;
-  if(typeof window.supabase === 'undefined' || !window.supabase.createClient){
-    await carregarScriptComPromise('./vendor/supabase.js');
-  }
+  if(typeof window.supabase === 'undefined' || !window.supabase.createClient){ await carregarScriptComPromise('./vendor/supabase.js'); }
   if(typeof window.supabase !== 'undefined' && window.supabase.createClient){
-    try{
-      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: true }
-      });
-      supabaseReady = true;
-      return true;
-    }catch(_e){ }
+    try{ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {auth:{flowType:'implicit',detectSessionInUrl:true,persistSession:true}}); supabaseReady=true; return true; }catch(_e){}
   }
   return false;
 }
@@ -9318,5 +9310,5 @@ init();
 
 <script src="./assets/store-v2.js" defer></script>
 <script src="./storefront-phase1.js" defer></script>
-</body>
+<script src="./storefront-request.js"></script></body>
 </html>

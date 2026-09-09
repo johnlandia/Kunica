@@ -8,7 +8,7 @@
 // não os encontra.
 
 const CACHE_VERSAO = 'dionuel-v3-phase1-store';
-const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './vendor/supabase.js', './vendor/supabase.js', './vendor/supabase.js', './storefront-phase1.js', './storefront-phase1.css', './vendor/supabase.js', './vendor/supabase.js'];
+const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './storefront-phase1.js', './storefront-phase1.css', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js', './vendor/supabase.js', './storefront-request.js', './storefront-request.css', './storefront-phase1-enhance.js'];
 
 self.addEventListener('install', (evento) => {
   self.skipWaiting();
