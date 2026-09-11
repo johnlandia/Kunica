@@ -31,12 +31,18 @@ jobs:
           index = Path('index.html')
           text = index.read_text(encoding='utf-8')
           text = text.replace('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>', '<script src="./vendor/supabase.js"></script>', 1)
-          if 'storefront-phase1.css' not in text:
+          if './storefront-phase1.css' not in text:
               text = text.replace('</head>', '<link rel="stylesheet" href="./storefront-phase1.css"><link rel="stylesheet" href="./storefront-request.css"></head>', 1)
-          if 'storefront-phase1.js' not in text:
+          if './storefront-request.css' not in text:
+              text = text.replace('</head>', '<link rel="stylesheet" href="./storefront-request.css"></head>', 1)
+          if './interface-profissional.css' not in text:
+              text = text.replace('</head>', '<link rel="stylesheet" href="./interface-profissional.css"></head>', 1)
+          if './storefront-phase1.js' not in text:
               text = text.replace('</body>', '<script src="./storefront-phase1.js"></script><script src="./storefront-phase1-enhance.js"></script><script src="./storefront-request.js"></script></body>', 1)
-          elif 'storefront-request.js' not in text:
+          elif './storefront-request.js' not in text:
               text = text.replace('</body>', '<script src="./storefront-request.js"></script></body>', 1)
+          if './interface-profissional.js' not in text:
+              text = text.replace('</body>', '<script src="./interface-profissional.js"></script></body>', 1)
           old = 'Isto costuma ser a ligação à internet (ou uma VPN ativa) a bloquear um recurso necessário — raramente é um problema no site em si.'
           text = text.replace(old, 'O sistema não conseguiu iniciar. Verifique a ligação à internet e tente novamente.', 1)
           index.write_text(text, encoding='utf-8')
@@ -44,11 +50,11 @@ jobs:
           if sw.exists():
               s = sw.read_text(encoding='utf-8')
               import re
-              s = re.sub(r"const CACHE_VERSAO = '[^']+';", "const CACHE_VERSAO = 'dionuel-v4-premium-interface';", s, count=1)
+              s = re.sub(r"const CACHE_VERSAO = '[^']+';", "const CACHE_VERSAO = 'dionuel-v5-professional-interface';", s, count=1)
               start = s.find('const FICHEIROS_ESSENCIAIS = ')
               end = s.find(';', start)
               if start >= 0 and end >= 0:
-                  files = ["'./'", "'./index.html'", "'./manifest.json'", "'./icon-192.png'", "'./icon-512.png'", "'./vendor/supabase.js'", "'./storefront-phase1.js'", "'./storefront-phase1.css'", "'./storefront-phase1-enhance.js'", "'./storefront-request.js'", "'./storefront-request.css'"]
+                  files = ["'./'", "'./index.html'", "'./manifest.json'", "'./icon-192.png'", "'./icon-512.png'", "'./vendor/supabase.js'", "'./storefront-phase1.js'", "'./storefront-phase1.css'", "'./storefront-phase1-enhance.js'", "'./storefront-request.js'", "'./storefront-request.css'", "'./interface-profissional.js'", "'./interface-profissional.css'"]
                   s = s[:start] + 'const FICHEIROS_ESSENCIAIS = [' + ', '.join(files) + ']' + s[end+1:]
               sw.write_text(s, encoding='utf-8')
           PY
@@ -58,5 +64,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html sw.js vendor/supabase.js
           if git diff --cached --quiet; then echo "No changes needed"; exit 0; fi
-          git commit -m "fix: preserve platform while wiring premium interface [skip ci]"
+          git commit -m "fix: preserve platform while publishing professional interface [skip ci]"
           git push
