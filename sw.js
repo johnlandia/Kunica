@@ -7,9 +7,8 @@
 // onde está o index.html no servidor (ex.: Netlify) — senão o navegador
 // não os encontra.
 
-const CACHE_VERSAO = 'dionuel-v4-premium-interface';
-const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './storefront-phase1.js', './storefront-phase1.css', './storefront-phase1-enhance.js', './storefront-request.js', './storefront-request.css']
-});
+const CACHE_VERSAO = 'dionuel-v5-professional-interface';
+const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './storefront-phase1.js', './storefront-phase1.css', './storefront-phase1-enhance.js', './storefront-request.js', './storefront-request.css', './interface-profissional.js', './interface-profissional.css']
 
 self.addEventListener('activate', (evento) => {
   self.clients.claim();
