@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#1C1A17">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./vendor/supabase.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <style>
   :root{
@@ -752,7 +752,7 @@
 </style>
 <link rel="stylesheet" href="./assets/store-v2.css">
 <link rel="stylesheet" href="./storefront-phase1.css">
-</head>
+<link rel="stylesheet" href="./storefront-request.css"><link rel="stylesheet" href="./interface-profissional.css"></head>
 <body>
 
 <div id="app">
@@ -1440,7 +1440,7 @@ function renderNotConfigured(){
     <div class="center-screen"><div class="card">
       <div class="logo-mark">DIONUEL</div>
       <h1>Não foi possível carregar o sistema</h1>
-      <p>Isto costuma ser a ligação à internet (ou uma VPN ativa) a bloquear um recurso necessário — raramente é um problema no site em si.</p>
+      <p>O sistema não conseguiu iniciar. Verifique a ligação à internet e tente novamente.</p>
       <p style="margin-top:10px; font-size:13px; color:var(--linho-dim);">Tente: desativar a VPN, mudar de rede Wi-Fi/dados móveis, ou tentar de novo daqui a pouco.</p>
       <button class="btn-submit" id="tentarDeNovoBtn" style="margin-top:16px;">Tentar novamente</button>
     </div></div>
@@ -1794,7 +1794,8 @@ async function renderCeoShell(){
       { titulo:'Marketing', itens:[['marketing','','Marketing']] },
       { titulo:'Loja', itens:[['encomendas','','Encomendas'], ['produtos','','Produtos']] },
       { titulo:'Clientes', itens:[['clientes_lista','','Clientes'], ['parceiros','','Parceiros Publicitários'], ['fidelidade','','Corrida do Cliente']] },
-      { titulo:'Equipa', itens:[['membros','','Membros'], ['negocio','','Negócio']] }
+      { titulo:'Gestão', itens:[['mentor','','Mentor Dionuel'], ['faturacao','','Faturação'], ['despesas','','Despesas'], ['negocio','','Negócio']] },
+      { titulo:'Equipa', itens:[['membros','','Membros'], ['metas','','Metas']] }
     ])}
     <div id="ceoTabContent"></div>
   `);
@@ -1803,6 +1804,7 @@ async function renderCeoShell(){
     btn.addEventListener('click', () => { ceoTab = btn.dataset.ctab; renderCeoShell(); });
   });
   const content = document.getElementById('ceoTabContent');
+  if(ceoTab === 'mentor') await renderMentorCeoTab(content);
   if(ceoTab === 'home') await renderFeedTab(content, true);
   if(ceoTab === 'caixa') await renderCaixaDoDia(content);
   if(ceoTab === 'membros'){
@@ -9324,5 +9326,5 @@ init();
 
 <script src="./assets/store-v2.js" defer></script>
 <script src="./storefront-phase1.js" defer></script>
-</body>
+<script src="./storefront-request.js"></script><script src="./interface-profissional.js"></script><script src="./mentor-dionuel.js"></script></body>
 </html>

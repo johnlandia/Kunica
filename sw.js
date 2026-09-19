@@ -7,11 +7,8 @@
 // onde está o index.html no servidor (ex.: Netlify) — senão o navegador
 // não os encontra.
 
-const CACHE_VERSAO = 'dionuel-v5-professional-interface';
-const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './storefront-phase1.js', './storefront-phase1.css', './storefront-phase1-enhance.js', './storefront-request.js', './storefront-request.css', './interface-profissional.js', './interface-profissional.css']
-
-self.addEventListener('activate', (evento) => {
-  self.clients.claim();
+const CACHE_VERSAO = 'dionuel-v6-mentor';
+const FICHEIROS_ESSENCIAIS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './vendor/supabase.js', './storefront-phase1.js', './storefront-phase1.css', './storefront-phase1-enhance.js', './storefront-request.js', './storefront-request.css', './interface-profissional.js', './interface-profissional.css', './mentor-dionuel.js']
   evento.waitUntil(
     caches.keys().then((nomes) =>
       Promise.all(nomes.filter((n) => n !== CACHE_VERSAO).map((n) => caches.delete(n)))
